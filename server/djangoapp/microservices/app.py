@@ -1,25 +1,13 @@
 import json
 import os
-import zipfile
 from flask import Flask
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 
 app = Flask("Sentiment Analyzer")
 
-# Ensure bundled VADER lexicon is available offline
 base_dir = os.path.dirname(os.path.abspath(__file__))
-local_nltk_dir = os.path.join(base_dir, "nltk_data")
-lexicon_dir = os.path.join(local_nltk_dir, "sentiment")
-zip_path = os.path.join(base_dir, "sentiment", "vader_lexicon.zip")
-if os.path.exists(zip_path) and not os.path.exists(
-    os.path.join(lexicon_dir, "vader_lexicon")
-):
-    os.makedirs(lexicon_dir, exist_ok=True)
-    with zipfile.ZipFile(zip_path, "r") as zf:
-        zf.extractall(lexicon_dir)
-if os.path.exists(local_nltk_dir):
-    nltk.data.path.insert(0, local_nltk_dir)
+nltk.data.path.insert(0, base_dir)
 
 sia = SentimentIntensityAnalyzer()
 
