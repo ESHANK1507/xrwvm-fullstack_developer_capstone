@@ -1,0 +1,43 @@
+name: Lint Code
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Run flake8 on Django backend
+        run: flake8 server/djangoapp server/djangoproj --exclude=migrations,nltk_data
+
+  lint-javascript:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install jshint
+        run: npm install -g jshint
+
+      - name: Run jshint on Express database API
+        run: jshint server/database/app.js
+
